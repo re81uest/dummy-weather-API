@@ -1,10 +1,21 @@
 import random
+from contextlib import asynccontextmanager
 
 from fastapi import FastAPI, Query
 
+from app.database import init_db
+from app.middleware import RequestResponseLoggingMiddleware
 from app.schemas import WeatherResponse
 
-app = FastAPI(title="Dummy Weather API")
+
+@asynccontextmanager
+async def lifespan(_app: FastAPI):
+    await init_db()
+    yield
+
+
+app = FastAPI(title="Dummy Weather API", lifespan=lifespan)
+app.add_middleware(RequestResponseLoggingMiddleware)
 
 
 @app.get("/")

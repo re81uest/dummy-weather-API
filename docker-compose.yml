@@ -1,0 +1,43 @@
+services:
+  postgres:
+    image: postgres:17
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_DB: postgres
+      POSTGRES_PASSWORD: mysecretpassword
+    volumes:
+      - dummy-volume:/var/lib/postgresql/data
+    networks:
+      - dummynet
+    restart: unless-stopped
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB || exit 1"
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    
+  app:
+    build: .
+    ports:
+      - "8111:8111"
+    environment:
+      DATABASE_URL: postgresql+asyncpg://postgres:mysecretpassword@postgres:5432/postgres
+    networks:
+      - dummynet
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: unless-stopped
+
+volumes:
+  dummy-volume:
+    external: true
+
+networks:
+  dummynet:
+    external: true

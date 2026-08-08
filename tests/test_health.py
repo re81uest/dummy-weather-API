@@ -1,12 +1,14 @@
+from unittest.mock import AsyncMock, patch
+
 from fastapi.testclient import TestClient
 
 from app.main import app
 
-client = TestClient(app, lifespan="off")
-
 
 def test_health() -> None:
-    response = client.get("/health")
+    with patch("app.main.init_db", new_callable=AsyncMock):
+        client = TestClient(app)
+        response = client.get("/health")
 
     assert response.status_code == 200
     body = response.json()

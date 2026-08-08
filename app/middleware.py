@@ -1,9 +1,14 @@
+import logging
+
+from sqlalchemy.exc import SQLAlchemyError
 from starlette.middleware.base import BaseHTTPMiddleware, RequestResponseEndpoint
 from starlette.requests import Request
 from starlette.responses import Response
 
 from app.database import SessionLocal
 from app.models import RequestResponseLog
+
+logger = logging.getLogger(__name__)
 
 
 class RequestResponseLoggingMiddleware(BaseHTTPMiddleware):
@@ -33,8 +38,8 @@ class RequestResponseLoggingMiddleware(BaseHTTPMiddleware):
                     )
                 )
                 await session.commit()
-        except Exception:
-            pass
+        except SQLAlchemyError:
+            logger.exception("Failed to persist request/response log")
 
         headers = {
             key: value

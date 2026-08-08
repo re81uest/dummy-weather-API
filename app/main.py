@@ -27,6 +27,11 @@ def root() -> dict[str, str]:
     }
 
 
+@app.get("/health")
+def health() -> dict[str, str]:
+    return {"status": "healthy"}
+
+
 @app.get("/weather", response_model=WeatherResponse)
 def get_weather(city: str = Query(..., min_length=1)) -> WeatherResponse:
     temperature = round(random.uniform(-20.0, 40.0), 1)

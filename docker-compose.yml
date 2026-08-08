@@ -5,6 +5,7 @@ services:
       - "80:80"
     volumes:
       - ./nginx/conf.d:/etc/nginx/conf.d:ro
+      - ./static:/usr/share/nginx/html/static:ro
     networks:
       - dummynet
     restart: unless-stopped

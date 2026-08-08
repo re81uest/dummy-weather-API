@@ -1,16 +1,21 @@
+from collections.abc import Generator
 from unittest.mock import AsyncMock, patch
 
+import pytest
 from fastapi.testclient import TestClient
 
 from app.main import app
 
 
-def test_health() -> None:
+@pytest.fixture
+def client() -> Generator[TestClient, None, None]:
     with patch("app.main.init_db", new_callable=AsyncMock):
-        client = TestClient(app)
-        response = client.get("/health")
+        with TestClient(app) as client:
+            yield client
+
+
+def test_health(client: TestClient) -> None:
+    response = client.get("/health")
 
     assert response.status_code == 200
-    body = response.json()
-    assert "status" in body
-    assert body["status"] == "healthy"
+    assert response.json() == {"status": "healthy"}

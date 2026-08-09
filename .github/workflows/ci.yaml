@@ -22,7 +22,7 @@ jobs:
       - name: Ruff format
         run: ruff format --check .
 
-  ci:
+  tests:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -33,4 +33,4 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements-dev.txt
       - name: Pytest
-        run: pytest
+        run: pytest -v

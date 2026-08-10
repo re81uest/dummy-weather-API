@@ -9,9 +9,11 @@ from app.main import app
 
 @pytest.fixture
 def client() -> Generator[TestClient, None, None]:
-    with patch("app.main.init_db", new_callable=AsyncMock):
-        with TestClient(app) as client:
-            yield client
+    with (
+        patch("app.main.init_db", new_callable=AsyncMock),
+        TestClient(app) as client,
+    ):
+        yield client
 
 
 def test_health_does_not_touch_database(client: TestClient) -> None:

@@ -33,7 +33,7 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements-dev.txt
       - name: Pytest
-        run: pytest -v
+        run: python -m pytest -v
 
   docker-build:
     runs-on: ubuntu-latest

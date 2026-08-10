@@ -57,6 +57,21 @@ services:
       - dummynet
     restart: unless-stopped
 
+  node-exporter:
+    image: prom/node-exporter:v1.9.1
+    command:
+      - --path.procfs=/host/proc
+      - --path.sysfs=/host/sys
+      - --path.rootfs=/rootfs
+      - --collector.filesystem.mount-points-exclude=^/(sys|proc|dev|host|etc)($$|/)
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/rootfs:ro
+    networks:
+      - dummynet
+    restart: unless-stopped
+
 volumes:
   dummy-volume:
     external: true

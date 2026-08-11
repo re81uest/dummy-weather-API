@@ -51,6 +51,7 @@ services:
       - "9090:9090"
     volumes:
       - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus-data:/prometheus
     command:
       - --config.file=/etc/prometheus/prometheus.yml
     networks:
@@ -76,12 +77,18 @@ services:
     image: grafana/grafana:12.2.0
     ports:
       - "3000:3000"
+    volumes:
+      - grafana-data:/var/lib/grafana
     networks:
       - dummynet
     restart: unless-stopped
 
 volumes:
   dummy-volume:
+    external: true
+  prometheus-data:
+    external: true
+  grafana-data:
     external: true
 
 networks:

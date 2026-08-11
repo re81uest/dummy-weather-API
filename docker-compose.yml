@@ -72,6 +72,14 @@ services:
       - dummynet
     restart: unless-stopped
 
+  grafana:
+    image: grafana/grafana:12.2.0
+    ports:
+      - "3000:3000"
+    networks:
+      - dummynet
+    restart: unless-stopped
+
 volumes:
   dummy-volume:
     external: true

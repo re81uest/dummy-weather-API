@@ -15,7 +15,7 @@ class RequestResponseLoggingMiddleware(BaseHTTPMiddleware):
     async def dispatch(
         self, request: Request, call_next: RequestResponseEndpoint
     ) -> Response:
-        if request.url.path == "/health":
+        if request.url.path in ("/health", "/metrics"):
             return await call_next(request)
 
         request_body = await request.body()

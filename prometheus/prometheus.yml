@@ -12,3 +12,9 @@ scrape_configs:
     static_configs:
       - targets:
           - node-exporter:9100
+
+  - job_name: app
+    static_configs:
+      - targets:
+          - app:8111
+    metrics_path: /metrics

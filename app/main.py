@@ -2,6 +2,7 @@ import random
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI, Query
+from prometheus_fastapi_instrumentator import Instrumentator
 
 from app.database import init_db
 from app.middleware import RequestResponseLoggingMiddleware
@@ -16,6 +17,7 @@ async def lifespan(_app: FastAPI):
 
 app = FastAPI(title="Dummy Weather API", lifespan=lifespan)
 app.add_middleware(RequestResponseLoggingMiddleware)
+Instrumentator().instrument(app).expose(app)
 
 
 @app.get("/")
